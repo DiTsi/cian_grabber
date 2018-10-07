@@ -7,7 +7,7 @@ from time import sleep
 
 
 first_ss = "downloads/offers_2018.10.01_00.48.34.xlsx"
-second_ss = "downloads/offers_2018.10.04_00.15.26.xlsx"
+second_ss = "downloads/offers_2018.10.07_21.35.07.xlsx"
 
 
 def get_data_by_id(list, id, column):
@@ -65,10 +65,12 @@ def get_new_ids(ws_list_first, ws_list_second):
 
 
 def get_new_links(list, new_ids_list):
+    counter = 1
     for i in range(len(new_ids_list)):
         for j in range(1, len(list)):
             if list[j][0] == new_ids_list[i]:
-                print("id: {}\t\tlink: {}".format(new_ids_list[i], list[j][22]))
+                print("{}. id: {}\t\tlink: {}".format(counter, new_ids_list[i], list[j][22]))
+                counter += 1
 
 
 first_wb = load_workbook(filename=first_ss, read_only=True)
@@ -83,9 +85,8 @@ l2 = read_sheet(second_ws)
 
 e = get_new_ids(l1, l2)
 get_new_links(l2, e)
-for i in e:
-    print(get_data_by_id(l2, i, 10) + "\n\n")
-# for
+# for i in e:
+#     print(get_data_by_id(l2, i, 10) + "\n\n")
 
 sleep(1)
 #

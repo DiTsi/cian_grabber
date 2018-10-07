@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from time import sleep
 import os
 from datetime import datetime
@@ -11,20 +14,25 @@ filename = "offers.xlsx"
 options = webdriver.ChromeOptions()
 prefs = {'download.default_directory' : download_path}
 options.add_experimental_option('prefs', prefs)
-options.add_argument('--headless')
-options.add_argument('--no-sandbox')
-options.add_argument('--user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/60.0.3112.50 Safari/537.36"')
-# user_agent = 'I LIKE CHOCOLATE'
-# options.add_argument(f'user-agent={user_agent}')
-# options.add_argument('--disable-dev-shm-usage')
+# options.add_argument('--headless')
+# options.add_argument('--no-sandbox')
+# options.add_argument('--user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/60.0.3112.50 Safari/537.36"')
+# options.add_argument('--disable-gpu')
+
 
 driver = webdriver.Chrome(options=options)
-
 
 driver.get(url)
 sleep(5)
 
 # e = driver.page_source
+try:
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Сохранить файл в Excel')]"))
+    )
+except:
+    raise Exception
+
 driver.find_element_by_xpath("//*[contains(text(), 'Сохранить файл в Excel')]").click()
 
 fullpath = download_path + "/" + filename
@@ -36,7 +44,6 @@ date = now.strftime("%Y.%m.%d_%H.%M.%S")
 fullpath_new = fullpath[:-5] + "_" + date + ".xlsx"
 
 if os.path.isfile(fullpath):
-
     os.rename(fullpath, fullpath_new)
 else:
     driver.close()
